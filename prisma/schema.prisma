@@ -47,6 +47,7 @@ model User {
   image         String?
   accounts      Account[]
   sessions      Session[]
+  todolists     TodoList[]
 }
 
 model VerificationToken {
@@ -55,4 +56,21 @@ model VerificationToken {
   expires    DateTime
 
   @@unique([identifier, token])
+}
+
+model TodoList {
+  id          String   @id @default(cuid())
+  name        String?
+  userId      String
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  todos       Todo[]
+}
+
+model Todo {
+  id          String   @id @default(cuid())
+  name        String?
+  description String?
+  completed   Boolean?
+  listId      String
+  list        TodoList @relation(fields: [listId], references: [id], onDelete: Cascade)
 }
